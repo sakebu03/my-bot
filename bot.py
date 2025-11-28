@@ -6,6 +6,7 @@ import os
 intents = discord.Intents.default()
 intents.members = True
 intents.voice_states = True
+intents.message_content = True  # żeby komendy tekstowe działały lepiej
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
@@ -26,7 +27,6 @@ async def teams(ctx):
         await ctx.send("Za mało osób na kanale, potrzeba minimum 2!")
         return
 
-    import random
     random.shuffle(members)
     mid = len(members) // 2
     team1 = members[:mid]
@@ -38,4 +38,12 @@ async def teams(ctx):
 
     await ctx.send(embed=embed)
 
-bot.run(os.getenv("DISCORD_TOKEN"))
+# --- TOKEN Z ENV ---
+token = os.getenv("DISCORD_TOKEN")
+
+if not token:
+    raise RuntimeError("Brak zmiennej środowiskowej DISCORD_TOKEN – ustaw ją w Railway!")
+
+bot.run(token)
+
+
