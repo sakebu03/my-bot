@@ -4,6 +4,7 @@ import random
 import os
 
 intents = discord.Intents.default()
+intents.message_content = True   # <-- DODANE
 intents.members = True
 intents.voice_states = True
 
@@ -12,6 +13,10 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 @bot.event
 async def on_ready():
     print(f"Bot zalogowany jako {bot.user}")
+
+@bot.command()
+async def ping(ctx):
+    await ctx.send("Pong!")      # prosta komenda testowa
 
 @bot.command()
 async def teams(ctx):
@@ -39,8 +44,9 @@ async def teams(ctx):
 
 token = os.getenv("DISCORD_TOKEN")
 if not token:
-    raise RuntimeError("❌ Railway nie widzi zmiennej DISCORD_TOKEN – ustaw ją w Variables!")
+    raise RuntimeError(
+        "Brak zmiennej środowiskowej DISCORD_TOKEN.\n"
+        "Na Railway ustaw nazwę: DISCORD_TOKEN, wartość: BOT TOKEN z zakładki Bot w Discord Developer Portal."
+    )
 
 bot.run(token)
-
-
